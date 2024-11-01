@@ -23,6 +23,24 @@ class SearchViewModel {
         didSet { fetchWithFilters() }
     }
     
+    init() {
+        fetchDefaultCharacters()
+    }
+    
+    private func fetchDefaultCharacters() {
+        let defaultEndpoint = "\(baseUrl)?page=1"
+        AF.request(defaultEndpoint).validate().responseDecodable(of: SearchResponse.self) { response in
+            switch response.result {
+            case .success(let searchResponse):
+                self.searched = searchResponse.results
+                self.completionHandler?(.success(searchResponse.results))
+            case .failure(let error):
+                print("Error fetching default characters: \(error.localizedDescription)")
+                self.completionHandler?(.failure(error))
+            }
+        }
+    }
+    
     private func fetchWithFilters() {
         fetchSearch(for: currentSearchText) { [weak self] result in
             self?.completionHandler?(result)
@@ -55,4 +73,3 @@ class SearchViewModel {
         }
     }
 }
-

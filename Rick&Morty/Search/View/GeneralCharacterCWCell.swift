@@ -181,8 +181,8 @@ class GeneralCharacterCWCell: UICollectionViewCell {
             labelStacks.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             labelStacks.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
-            statusColorDot.widthAnchor.constraint(equalToConstant: 8),
-            statusColorDot.heightAnchor.constraint(equalToConstant: 8)
+            statusColorDot.widthAnchor.constraint(equalToConstant: 16),
+            statusColorDot.heightAnchor.constraint(equalToConstant: 16)
             
         ])
     }
@@ -206,14 +206,18 @@ class GeneralCharacterCWCell: UICollectionViewCell {
         
     }
     
-    /*  func setDotColor() {
-     
-     if statusTitle.text == "Alive" {
-     statusColorDot.backgroundColor = .green
-     } else if statusTitle.text == "Dead" {
-     statusColorDot.backgroundColor = .red
-     } else { statusColorDot.backgroundColor = .gray }
-     
-     } */
+    func applyThemeInCell(_ theme: Theme) {
+            contentView.backgroundColor = theme == .dark ? .black : .white
+            
+            let textColor: UIColor = theme == .dark ? .white : .black
+            let secondaryTextColor: UIColor = theme == .dark ? .lightGray : .darkGray
+            
+            nameTitle.textColor = textColor
+            statusTitle.textColor = textColor
+            lastKnownLocationTitle.textColor = secondaryTextColor
+            lastKnownLocationDataTitle.textColor = secondaryTextColor
+            firstSeenTitle.textColor = secondaryTextColor
+            firstSeenDataTitle.textColor = secondaryTextColor
+        }
     
 }

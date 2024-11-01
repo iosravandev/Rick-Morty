@@ -8,7 +8,34 @@
 import UIKit
 import Foundation
 
+enum Theme: String {
+    case light
+    case dark
+    
+    var interfaceStyle: UIUserInterfaceStyle {
+        switch self {
+        case .light:
+            return .light
+        case .dark:
+            return .dark
+        }
+    }
+
+    static func save(theme: Theme) {
+        UserDefaults.standard.set(theme.rawValue, forKey: "selectedTheme")
+    }
+
+    static func load() -> Theme {
+        let savedTheme = UserDefaults.standard.string(forKey: "selectedTheme")
+        return Theme(rawValue: savedTheme ?? "light") ?? .light
+    }
+}
+
+
+
 class SearchView: UIViewController {
+    
+    var cellView = GeneralCharacterCWCell()
     
     private let viewModel = SearchViewModel()
     
@@ -27,6 +54,12 @@ class SearchView: UIViewController {
         searchBar.backgroundImage = UIImage()
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         return searchBar
+    }()
+    
+    let themeSwitch: UISwitch = {
+        let theme = UISwitch()
+        theme.translatesAutoresizingMaskIntoConstraints = false
+        return theme
     }()
     
     lazy var genderButton: UIButton = {
@@ -129,6 +162,7 @@ class SearchView: UIViewController {
         view.addSubview(genderTableView)
         view.addSubview(statusTableView)
         view.addSubview(generalCharacterCW)
+        view.addSubview(themeSwitch)
         view.backgroundColor = .white
         
         genderButton.addSubview(cancelGenderButton)
@@ -138,7 +172,10 @@ class SearchView: UIViewController {
         
         NSLayoutConstraint.activate([
             
-            searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            themeSwitch.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            themeSwitch.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            searchBar.topAnchor.constraint(equalTo: themeSwitch.bottomAnchor, constant: 16),
             searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
@@ -173,6 +210,9 @@ class SearchView: UIViewController {
             
         ])
         
+        themeSwitch.addTarget(self, action: #selector(toggleTheme), for: .valueChanged)
+        applyTheme()
+        
         genderTableView.register(UITableViewCell.self, forCellReuseIdentifier: "genderCell")
         statusTableView.register(UITableViewCell.self, forCellReuseIdentifier: "statusCell")
         searchBar.delegate = self
@@ -185,6 +225,27 @@ class SearchView: UIViewController {
                 case .failure(let error):
                     print("Error fetching results: \(error.localizedDescription)")
                 }
+            }
+        }
+    }
+    
+    @objc func toggleTheme() {
+        let selectedTheme: Theme = themeSwitch.isOn ? .dark : .light
+        Theme.save(theme: selectedTheme)
+        applyTheme()
+    }
+    
+    func applyTheme() {
+        let theme = Theme.load()
+        themeSwitch.isOn = (theme == .dark)
+        view.window?.overrideUserInterfaceStyle = theme.interfaceStyle
+        view.backgroundColor = theme == .dark ? .black : .white
+        searchBar.barTintColor = theme == .dark ? .clear : .white
+        genderButton.setTitleColor(theme == .dark ? .white : .black, for: .normal)
+        statusButton.setTitleColor(theme == .dark ? .white : .black, for: .normal)
+        for cell in generalCharacterCW.visibleCells {
+            if let characterCell = cell as? GeneralCharacterCWCell {
+                characterCell.applyThemeInCell(theme)
             }
         }
     }

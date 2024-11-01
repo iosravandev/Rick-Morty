@@ -48,4 +48,3 @@ struct SearchResponse: Decodable {
         case results = "results"
     }
 }
-

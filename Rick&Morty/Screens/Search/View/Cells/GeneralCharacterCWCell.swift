@@ -9,40 +9,39 @@ import Foundation
 import UIKit
 import SDWebImage
 
-class GeneralCharacterCWCell: UICollectionViewCell {
-    
+class GeneralCharacterCVCell: UICollectionViewCell {
     static let identifier = "GeneralCharacterCWCell"
     
-    lazy var nameTitle: UILabel = {
+    private lazy var nameTitle: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .black
+        label.textColor = .label
         label.font = .systemFont(ofSize: 10, weight: .regular)
         label.textAlignment = .left
         label.numberOfLines = 1
         return label
     }()
     
-    lazy var statusTitle: UILabel = {
+    private lazy var statusTitle: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .black
+        label.textColor = .label
         label.font = .systemFont(ofSize: 12, weight: .bold)
         label.textAlignment = .left
         label.numberOfLines = 1
         return label
     }()
     
-    lazy var statusColorDot: UIView = {
+    private lazy var statusColorDot: UIView = {
         let dot = UIView()
         dot.backgroundColor = .yellow
         dot.clipsToBounds = true
-        dot.layer.cornerRadius = 16
+        dot.layer.cornerRadius = 8
         dot.translatesAutoresizingMaskIntoConstraints = false
         return dot
     }()
     
-    lazy var statusStack: UIStackView = {
+    private lazy var statusStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [statusColorDot, statusTitle])
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .horizontal
@@ -53,7 +52,7 @@ class GeneralCharacterCWCell: UICollectionViewCell {
     }()
     
     
-    lazy var nameStack: UIStackView = {
+    private lazy var nameStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [nameTitle, statusStack])
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .vertical
@@ -63,29 +62,29 @@ class GeneralCharacterCWCell: UICollectionViewCell {
         return stack
     }()
     
-    lazy var lastKnownLocationTitle: UILabel = {
+    private lazy var lastKnownLocationTitle: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Last known location:"
-        label.textColor = .black
+        label.textColor = .secondaryLabel
         label.font = .systemFont(ofSize: 10, weight: .regular)
         label.textAlignment = .left
         label.numberOfLines = 1
         return label
     }()
     
-    lazy var lastKnownLocationDataTitle: UILabel = {
+    private lazy var lastKnownLocationDataTitle: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Purge Planet"
-        label.textColor = .black
+        label.textColor = .secondaryLabel
         label.font = .systemFont(ofSize: 12, weight: .bold)
         label.textAlignment = .left
         label.numberOfLines = 1
         return label
     }()
     
-    lazy var locationStack: UIStackView = {
+    private lazy var locationStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [lastKnownLocationTitle, lastKnownLocationDataTitle])
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .vertical
@@ -95,28 +94,28 @@ class GeneralCharacterCWCell: UICollectionViewCell {
         return stack
     }()
     
-    lazy var firstSeenTitle: UILabel = {
+    private lazy var firstSeenTitle: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "First seen in:"
-        label.textColor = .black
+        label.textColor = .secondaryLabel
         label.font = .systemFont(ofSize: 10, weight: .regular)
         label.textAlignment = .left
         label.numberOfLines = 1
         return label
     }()
     
-    lazy var firstSeenDataTitle: UILabel = {
+    private lazy var firstSeenDataTitle: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .black
+        label.textColor = .secondaryLabel
         label.font = .systemFont(ofSize: 12, weight: .bold)
         label.textAlignment = .left
         label.numberOfLines = 1
         return label
     }()
     
-    lazy var seenStack: UIStackView = {
+    private lazy var seenStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [firstSeenTitle, firstSeenDataTitle])
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .vertical
@@ -126,7 +125,7 @@ class GeneralCharacterCWCell: UICollectionViewCell {
         return stack
     }()
     
-    lazy var labelStacks: UIStackView = {
+    private lazy var labelStacks: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [nameStack, locationStack, seenStack])
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.axis = .vertical
@@ -136,7 +135,7 @@ class GeneralCharacterCWCell: UICollectionViewCell {
         return stack
     }()
     
-    let imageView: UIImageView = {
+    private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "photo.artframe")
@@ -144,16 +143,6 @@ class GeneralCharacterCWCell: UICollectionViewCell {
         imageView.clipsToBounds = true
         return imageView
     }()
-    
-    /*lazy var viewStacks: UIStackView = {
-     let stack = UIStackView(arrangedSubviews: [imageView, labelStacks])
-     stack.translatesAutoresizingMaskIntoConstraints = false
-     stack.axis = .horizontal
-     stack.alignment = .center
-     stack.distribution = .fillEqually
-     stack.spacing = 16
-     return stack
-     }()*/
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -165,12 +154,10 @@ class GeneralCharacterCWCell: UICollectionViewCell {
     }
     
     private func setupView() {
-        
         contentView.addSubview(imageView)
         contentView.addSubview(labelStacks)
         
         NSLayoutConstraint.activate([
-            
             imageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             imageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             imageView.heightAnchor.constraint(equalToConstant: 180),
@@ -188,7 +175,6 @@ class GeneralCharacterCWCell: UICollectionViewCell {
     }
     
     func configure(with model: SearchModel) {
-        
         nameTitle.text = model.name
         statusTitle.text = model.status + " - " + model.species
         lastKnownLocationDataTitle.text = model.location.name
@@ -203,21 +189,5 @@ class GeneralCharacterCWCell: UICollectionViewCell {
         } else if model.status == "Dead" {
             statusColorDot.backgroundColor = .red
         } else { statusColorDot.backgroundColor = .gray }
-        
     }
-    
-    func applyThemeInCell(_ theme: Theme) {
-            contentView.backgroundColor = theme == .dark ? .black : .white
-            
-            let textColor: UIColor = theme == .dark ? .white : .black
-            let secondaryTextColor: UIColor = theme == .dark ? .lightGray : .darkGray
-            
-            nameTitle.textColor = textColor
-            statusTitle.textColor = textColor
-            lastKnownLocationTitle.textColor = secondaryTextColor
-            lastKnownLocationDataTitle.textColor = secondaryTextColor
-            firstSeenTitle.textColor = secondaryTextColor
-            firstSeenDataTitle.textColor = secondaryTextColor
-        }
-    
 }

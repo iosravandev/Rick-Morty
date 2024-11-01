@@ -8,8 +8,7 @@
 import UIKit
 import Foundation
 
-class DeatilsView: UIViewController {
-    
+class DetailViewController: UIViewController {
     var character: SearchModel?
     
     private lazy var nameLabel: UILabel = {
@@ -54,7 +53,7 @@ class DeatilsView: UIViewController {
     }
     
     private func setupView() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         view.addSubview(imageView)
         view.addSubview(nameLabel)
         view.addSubview(statusLabel)
@@ -62,7 +61,6 @@ class DeatilsView: UIViewController {
         view.addSubview(genderLabel)
         
         NSLayoutConstraint.activate([
-            
             imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             imageView.heightAnchor.constraint(equalToConstant: 200),
@@ -79,7 +77,6 @@ class DeatilsView: UIViewController {
             
             genderLabel.topAnchor.constraint(equalTo: speciesLabel.bottomAnchor, constant: 10),
             genderLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-            
         ])
     }
     
@@ -91,16 +88,7 @@ class DeatilsView: UIViewController {
         genderLabel.text = "Gender: \(character.gender)"
         
         if let url = URL(string: character.image) {
-            loadImage(from: url)
+            imageView.loadImage(from: url)
         }
-    }
-    
-    private func loadImage(from url: URL) {
-        URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
-            guard let data = data, error == nil else { return }
-            DispatchQueue.main.async {
-                self?.imageView.image = UIImage(data: data)
-            }
-        }.resume()
     }
 }

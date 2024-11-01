@@ -10,8 +10,9 @@ import Alamofire
 import Foundation
 
 class SearchViewModel {
+    let statusOptions = ["alive", "dead", "unknown"]
+    let genderOptions = ["Male", "Female", "genderless", "unknown"]
     
-    lazy var baseUrl = "https://rickandmortyapi.com/api/character/"
     var searched: [SearchModel] = []
     var completionHandler: ((Result<[SearchModel], Error>) -> Void)?
     var currentSearchText: String = ""
@@ -28,7 +29,7 @@ class SearchViewModel {
     }
     
     private func fetchDefaultCharacters() {
-        let defaultEndpoint = "\(baseUrl)?page=1"
+        let defaultEndpoint = "\(Constants.Endpoint.baseUrl)?page=1"
         AF.request(defaultEndpoint).validate().responseDecodable(of: SearchResponse.self) { response in
             switch response.result {
             case .success(let searchResponse):
@@ -58,7 +59,7 @@ class SearchViewModel {
             endpoint += "&gender=\(gender)"
         }
         
-        let urlString = "\(baseUrl)\(endpoint)"
+        let urlString = "\(Constants.Endpoint.baseUrl)\(endpoint)"
         searched = []
         
         AF.request(urlString).validate().responseDecodable(of: SearchResponse.self) { response in
